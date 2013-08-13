@@ -3,7 +3,7 @@ from sympy import (
     LambertW, Lt, Matrix, Or, Piecewise, Poly, Q, Rational, S, Symbol,
     Wild, acos, asin, atan, atanh, cos, cosh, diff, exp, expand, im,
     log, pi, re, sec, sin, sinh, solve, solve_linear, sqrt, sstr, symbols,
-    sympify, tan, tanh, root, simplify, atan2, arg)
+    sympify, tan, tanh, root, simplify, atan2, arg, Interval)
 from sympy.core.function import nfloat
 from sympy.solvers import solve_linear_system, solve_linear_system_LU, \
     solve_undetermined_coeffs
@@ -1371,3 +1371,10 @@ def test_misc():
 
     # watch out for recursive loop in tsolve
     raises(NotImplementedError, lambda: solve((x+2)**y*x-3,x))
+
+
+@XFAIL
+def test_inverses():
+    assert solve(floor(x)-5,x) == Interval(5,6,True,False)
+    assert solve(ceiling(x)-5,x) == Interval(4,5,False,True)
+    assert solve(abs(x)-5,x) == Interval(5,6,True,False)

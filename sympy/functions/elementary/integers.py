@@ -4,6 +4,8 @@ from sympy.core.basic import C
 from sympy.core.singleton import S
 from sympy.core.function import Function
 from sympy.core import Add
+from sympy import Lambda
+from sympy.core.sets import Interval
 from sympy.core.evalf import get_integer_part, PrecisionExhausted
 
 ###############################################################################
@@ -75,6 +77,54 @@ class RoundFunction(Function):
         return self.args[0].is_real
 
 
+class unfloor(Function):
+    """
+    Unfloor is the reverse function to floor.
+
+        >>> from sympy import I
+        >>> from sympy.functions.elementary.integers import unfloor
+        >>> unfloor(17)
+        [17,18)
+        >>> unfloor(-17)
+        [-17,-16)
+        >>> unfloor(-I)
+        [-I,0)
+
+    See Also
+    ========
+
+    floor
+    """
+
+    nargs = 1
+
+    def inverse(self, argindex=1):
+        """
+        Returns the inverse function of ``unfloor(x)``.
+        """
+        return floor
+                                    
+                                    
+    @classmethod
+    def eval(cls, arg):
+        dir(arg)
+        if arg.func is floor:
+            return arg.args[0]
+        elif arg.is_integer:
+            return Interval(arg,arg+1,True,False)
+        else:
+            raise NotImplementedError('FIXME implement unfloor for %r' % arg);
+
+    def _eval_is_bounded(self):
+        return self.args[0].is_bounded
+
+    def _eval_is_real(self):
+        return self.args[0].is_integer
+
+    def _eval_is_integer(self):
+        return self.args[0].is_integer
+
+
 class floor(RoundFunction):
     """
     Floor is a univariate function which returns the largest integer
@@ -103,6 +153,13 @@ class floor(RoundFunction):
     """
     _dir = -1
 
+    def inverse(self, argindex=1):
+        """
+        Returns the inverse function of ``floor(x)``.
+        """
+        return unfloor
+                                    
+                                    
     @classmethod
     def _eval_number(cls, arg):
         if arg.is_Number:
