@@ -5,7 +5,7 @@ from sympy.core.singleton import S
 from sympy.core.function import Function
 from sympy.core import Add
 from sympy import Lambda
-from sympy.core.sets import Interval
+from sympy.core.sets import Interval,Set
 from sympy.core.evalf import get_integer_part, PrecisionExhausted
 
 ###############################################################################
@@ -20,6 +20,8 @@ class RoundFunction(Function):
 
     @classmethod
     def eval(cls, arg):
+        if isinstance(arg, Set):
+            return arg._eval_imageset(cls.eval)
         if arg.is_integer:
             return arg
         if arg.is_imaginary:
