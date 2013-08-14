@@ -722,6 +722,9 @@ class Interval(Set, EvalfMixin):
         denom = start_denom * end_denom
         return (Interval(start_numer*end_denom, end_numer*start_denom, self.left_open, self.right_open), denom)
     
+    def as_base_exp(self):
+        return self, S.One
+        
     def expand(self, deep=True, **kwargs):
         if not deep:
             return self
