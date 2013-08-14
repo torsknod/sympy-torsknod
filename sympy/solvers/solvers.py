@@ -1365,7 +1365,17 @@ def _solve(f, *symbols, **flags):
                                 pass
                         gen = poly.gen
                         if gen != symbol:
-                            u = Dummy()
+                            a = {}
+                            a['commutative'] = gen._eval_is_commutative();
+                            a['integer'] = gen._eval_is_integer();
+                            a['negative'] = gen._eval_is_negative();
+                            a['positive'] = gen._eval_is_positive();
+                            a['real'] = gen._eval_is_real();
+                            b = {}
+                            for k in a:
+                                if not a[k] is None:
+                                    b[k] = a[k]
+                            u = Dummy(**b)
                             inversion = _solve(gen - u, symbol, **flags)
                             soln = list(ordered(set([i.subs(u, s) for i in
                                         inversion for s in soln])))

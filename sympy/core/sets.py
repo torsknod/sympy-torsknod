@@ -701,6 +701,32 @@ class Interval(Set, EvalfMixin):
     @property
     def free_symbols(self):
         return self.start.free_symbols | self.end.free_symbols
+    
+    def as_numer_denom(self):
+        """
+        >>> Interval(1,2).as_numer_denom()
+        ([1, 2], 1)
+
+        >>>Interval(1/2,2).as_numer_denom()
+        ([0.5, 2], 1)
+
+        >>>Interval(Rational(1,2),2).as_numer_denom()
+        ([1, 4], 2)
+        """
+        start_numer_denom = self.start.as_numer_denom()
+        start_numer = start_numer_denom[0]
+        start_denom = start_numer_denom[1]
+        end_numer_denom = self.end.as_numer_denom()
+        end_numer = end_numer_denom[0]
+        end_denom = end_numer_denom[1]
+        denom = start_denom * end_denom
+        return (Interval(start_numer*end_denom, end_numer*start_denom, self.left_open, self.right_open), denom)
+    
+    def expand(self, deep=True, **kwargs):
+        if not deep:
+            return self
+        else:
+            return Interval(self.start.expand(deep=deep, **kwargs), self.end.expand(deep=deep, **kwargs), self.left_open, self.right_open)
 
     def as_numer_denom(self):
         """
