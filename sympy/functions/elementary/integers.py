@@ -105,8 +105,7 @@ class unfloor(Function):
         Returns the inverse function of ``unfloor(x)``.
         """
         return floor
-                                    
-                                    
+
     @classmethod
     def eval(cls, arg):
         dir(arg)
@@ -160,8 +159,7 @@ class floor(RoundFunction):
         Returns the inverse function of ``floor(x)``.
         """
         return unfloor
-                                    
-                                    
+
     @classmethod
     def _eval_number(cls, arg):
         if arg.is_Number:
